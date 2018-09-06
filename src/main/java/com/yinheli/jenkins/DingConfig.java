@@ -49,7 +49,7 @@ public class DingConfig extends AbstractDescribableImpl<DingConfig> {
   public static final class DescriptorImpl extends Descriptor<DingConfig> {
     public FormValidation doCheckName(@QueryParameter String name) {
       if (StringUtils.isEmpty(name)) {
-        return FormValidation.error("名称和 accessToken 不能为空");
+        return FormValidation.error("名称不能为空");
       }
       return FormValidation.ok();
     }
