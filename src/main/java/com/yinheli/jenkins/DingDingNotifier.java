@@ -252,14 +252,8 @@ public class DingDingNotifier extends Recorder {
     public String call() throws IOException {
       try {
         StringBuilder sb = new StringBuilder();
-        String cmd = "git log --oneline --no-merges --pretty=format:\"%s\" -10";
-
-//        ProcessBuilder pb = new ProcessBuilder(cmd);
-//        pb.directory(new File(workingdir));
-//        Process process = pb.start();
-
+        String cmd = "git log --oneline --no-merges --pretty=format:%s -10";
         Process process = Runtime.getRuntime().exec(cmd, null, new File(workingdir));
-
         int exitValue = process.waitFor();
         logger.info("exitValue:{}", exitValue);
         if (exitValue == 0) {
