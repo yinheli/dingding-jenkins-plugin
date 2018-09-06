@@ -1,0 +1,30 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:entry title="名称" field="name">
+    <j:invokeStatic var="ds" className="com.yinheli.jenkins.DingGlobalConfig" method="get"/>
+    <select class="setting-input" name="name">
+      <f:option value="" selected="${instance.name == null}"></f:option>
+      <j:forEach var="s" items="${ds.config}">
+        <f:option value="${s.name}" selected="${s.name==instance.name}">${s.name}</f:option>
+      </j:forEach>
+    </select>
+  </f:entry>
+  <f:entry title="自定义消息" field="customMessage">
+    <f:textarea/>
+    <p>查看 <a href="${rootURL}/env-vars.html" target="_blank">可用的环境变量列表</a></p>
+  </f:entry>
+
+  <f:entry title="通知发送时机">
+    <div id="fix-dd">
+      <style>
+        #fix-dd {margin-top:4px;}
+        #fix-dd input {
+          top: 0 !important;
+        }
+      </style>
+      <f:checkbox field="onSuccess" value="true" checked="${instance.onSuccess}" title="成功"/>
+      <f:checkbox field="onFailed" value="true" checked="${instance.onFailed}" title="失败"/>
+      <f:checkbox field="onAbort" value="true" checked="${instance.onAbort}" title="取消"/>
+    </div>
+  </f:entry>
+</j:jelly>
