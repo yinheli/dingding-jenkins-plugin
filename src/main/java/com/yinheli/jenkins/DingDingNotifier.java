@@ -88,6 +88,9 @@ public class DingDingNotifier extends Recorder {
 
     String changeLog = getChangeLog(build.getChangeSet(), build.getWorkspace());
 
+
+    String messageTitle = String.format("%s 构建 %s", build.getFullDisplayName(), formatedResult);
+
     for (DingJobConfig c : config) {
       StringBuilder message = new StringBuilder();
       boolean send = false;
@@ -118,7 +121,7 @@ public class DingDingNotifier extends Recorder {
       }
 
       if (send) {
-        sendMessage(c.getName(), message.toString());
+        sendMessage(c.getName(), messageTitle, message.toString());
       }
     }
 
@@ -157,11 +160,11 @@ public class DingDingNotifier extends Recorder {
 
   private String getFormatedResult(Result result) {
     if (result == Result.SUCCESS) {
-      return "\uD83D\uDE04 成功 \uD83C\uDF89";
+      return "成功 \uD83D\uDE04 \uD83C\uDF89";
     } else if (result == Result.FAILURE) {
-      return "\uD83D\uDE2D 失败";
+      return "失败 \uD83D\uDE2D";
     } else if (result == Result.ABORTED) {
-      return "\uD83D\uDE1D 取消";
+      return "取消 \uD83D\uDE1D";
     }
 
     return result.toString();
@@ -171,7 +174,7 @@ public class DingDingNotifier extends Recorder {
     return causes.stream().map(Cause::getShortDescription).collect(Collectors.joining(", "));
   }
 
-  private void sendMessage(String name, String message) {
+  private void sendMessage(String name, String title, String message) {
     DingConfig cfg = null;
 
     for (DingConfig c : DingGlobalConfig.get().getConfig()) {
@@ -192,10 +195,14 @@ public class DingDingNotifier extends Recorder {
     body.put("msgtype", "markdown");
 
     JSONObject markdown = new JSONObject();
-    markdown.put("title", "dingding-jenkins-plugin");
+    markdown.put("title", title);
     markdown.put("text", message);
 
     body.put("markdown", markdown);
+
+    JSONObject at = new JSONObject();
+    at.put("isAtAll", true);
+    body.put("at", at);
 
     try {
       post.setRequestEntity(new StringRequestEntity(body.toJSONString(), "application/json", "UTF-8"));
