@@ -68,6 +68,10 @@ public class DingDingNotifier extends Recorder {
     Jenkins jenkins = Jenkins.getInstance();
 
     EnvVars envVars = build.getEnvironment(listener).overrideAll(build.getBuildVariables());
+    if ("true".equalsIgnoreCase(envVars.get("--> DISABLE_DINGDING_NOTIFICATION", "false"))) {
+      listener.getLogger().println("dingding notification disabled");
+      return true;
+    }
 
     Result result = build.getResult();
 
