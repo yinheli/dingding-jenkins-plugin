@@ -92,8 +92,9 @@ public class DingDingNotifier extends Recorder {
 
     String changeLog = getChangeLog(build.getChangeSet(), build.getWorkspace());
 
-
     String messageTitle = String.format("%s 构建 %s", build.getFullDisplayName(), formatedResult);
+
+    String formatedFullName = String.format("> ###### 项目 %s", build.getProject().getFullName());
 
     for (DingJobConfig c : config) {
       StringBuilder message = new StringBuilder();
@@ -102,7 +103,8 @@ public class DingDingNotifier extends Recorder {
       message.append(title).append("\n");
       message.append(status).append("\n");
       message.append(duration).append("\n");
-      message.append(node).append("\n\n");
+      message.append(node).append("\n");
+      message.append(formatedFullName).append("\n\n");
 
       String customerMessage = StringUtils.trimToNull(c.getCustomMessage());
       if (customerMessage != null) {
